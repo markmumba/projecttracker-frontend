@@ -12,7 +12,7 @@ export const useChat = () => {
 
   useEffect(() => {
     // Initialize WebSocket connection
-    ws.current = new WebSocket(`ws://localhost:8080/ws`);
+    ws.current = new WebSocket(`ws://process.env.NEXT_BACKEND_API_URL /ws`);
 
     ws.current.onopen = () => {
       setIsConnected(true);
