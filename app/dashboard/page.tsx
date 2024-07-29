@@ -114,7 +114,7 @@ function Dashboard() {
 
   return (
     <div>
-      <ProgressBar submissionCount={submissionCount} maxSubmissions={8} />
+      <ProgressBar submissionCount={submissionCount} maxSubmissions={10} />
       <div className=" p-4">
         <div className="flex flex-col relative md:flex-row justify-between">
           <div className="mb-4 md:mb-0 md:w-3/4  p-4 flex-grow">
