@@ -1,9 +1,8 @@
 
 import { ProjectDetails, UserDetails } from "@/app/shared/types";
-import avatar from "/public/images/user.png"
+import avatar from "@/public/images/user.png"
 import TimeRemaining from "./timeremaining";
 import Image, { StaticImageData } from "next/image";
-import { useState } from "react";
 import UploadAvatar from "../../uploadavatar";
 
 
@@ -17,10 +16,7 @@ function StudentCard({
   projectDetails?: ProjectDetails | null | undefined;
   submissionCount?: number | undefined;
 }) {
-  const avatarUrl = userDetails?.profile_image || avatar;
-
-
-
+  const avatarUrl: string | StaticImageData = userDetails?.profile_image || avatar;
   return (
     <>
       <div className="flex flex-col p-4 rounded-lg">
