@@ -60,7 +60,7 @@ function Login() {
       router.push('/dashboard');
     } catch (error) {
       console.log(error);
-      // You might want to set an error message here
+     
       setErrors({ email: 'Invalid email or password' });
     } finally {
       setLoading(false);
