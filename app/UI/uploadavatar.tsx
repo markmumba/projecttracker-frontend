@@ -1,9 +1,9 @@
 // components/UploadAvatar.tsx
 import { useState } from 'react';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { storage } from '../shared/firebaseconfig';
 import { axiosInstance } from '../fetcher/fetcher';
 import { v4 } from 'uuid';
+import { storage } from '../shared/firebaseconfig';
 
 function UploadAvatar() {
     const [file, setFile] = useState<File | null>(null);

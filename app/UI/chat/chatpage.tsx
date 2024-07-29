@@ -1,3 +1,4 @@
+'use client';
 import fetcher from "@/app/fetcher/fetcher";
 import { useChat } from "@/app/shared/hooks/useChat";
 import { useUserStore } from "@/app/shared/store";
