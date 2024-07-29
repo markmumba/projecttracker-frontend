@@ -40,7 +40,7 @@ COPY --from=build /app/.next ./.next
 COPY --from=build /app/public ./public
 
 # Install sharp for image optimization
-RUN pnpm add sharp
+
 
 # Expose port 3000 to the outside world
 EXPOSE 3000
