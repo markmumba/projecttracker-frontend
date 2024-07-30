@@ -87,9 +87,9 @@ function LecturerCard({ userDetails, students }: {
                                 style={{ top: 'calc(100% + 5px)' }}
                             >
                                 {students.map((student, index) => (
-                                    <div key={index} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                        {student.name}
-                                        <p>{student.email} </p>
+                                    <div key={index} className="px-6 py-2 bg-gray-100 hover:bg-gray-300 m-2 rounded-lg cursor-pointer">
+                                        <p className="text-lg">{student.name}</p>
+                                        <p className="font-bold">{student.email} </p>
                                     </div>
 
                                 ))}

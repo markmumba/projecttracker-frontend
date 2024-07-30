@@ -15,9 +15,14 @@ function Submissions({ lecturerSubmissions }: {
     const [showReviewed, setShowReviewed] = useState(false); // Toggle state
 
     const reviewedFalseSubmissions = lecturerSubmissions?.filter(submission => !submission.reviewed) ?? [];
-    const reviewedTrueSubmissions = lecturerSubmissions?.filter(submission => submission.reviewed) ?? [];
 
-
+    const reviewedTrueSubmissions = lecturerSubmissions
+        ?.filter(submission => submission.reviewed)
+        .sort((a, b) => {
+            const dateA = new Date(a.submission_date).getTime();
+            const dateB = new Date(b.submission_date).getTime();
+            return dateB - dateA;  
+        }) ?? [];
 
     const truncateDescription = (description: string, maxLength: number) => {
         if (description.length > maxLength) {
