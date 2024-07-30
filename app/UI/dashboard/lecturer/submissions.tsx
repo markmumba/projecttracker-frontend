@@ -14,11 +14,9 @@ function Submissions({ lecturerSubmissions }: {
     const setSelectedSubmissionId = useSubmissionStore((state) => state.setSelectedSubmissionId);
     const [showReviewed, setShowReviewed] = useState(false); // Toggle state
 
-    // Separate submissions based on the reviewed field
     const reviewedFalseSubmissions = lecturerSubmissions?.filter(submission => !submission.reviewed) ?? [];
     const reviewedTrueSubmissions = lecturerSubmissions?.filter(submission => submission.reviewed) ?? [];
 
-    // Sort both lists by submission_id
 
 
     const truncateDescription = (description: string, maxLength: number) => {
@@ -36,7 +34,6 @@ function Submissions({ lecturerSubmissions }: {
 
     return (
         <div className="relative">
-            {/* Toggle Button */}
             <div className="flex items-center mb-4">
                 <button
                     className={`mr-4 px-4 py-2 rounded-full focus:outline-none ${showReviewed ? 'bg-blue-400 text-white' : 'bg-gray-200 text-gray-700'}`}
@@ -46,7 +43,6 @@ function Submissions({ lecturerSubmissions }: {
                 </button>
             </div>
 
-            {/* Display submissions based on toggle state */}
             {showReviewed ?
                 reviewedTrueSubmissions.map((submission) => (
                     <div
