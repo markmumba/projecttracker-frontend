@@ -19,7 +19,7 @@ function UpdateUserProfileModal({ isOpen, onClose, onUpdate, currentUser }: {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    async function handleSubmit  (e: React.FormEvent)  {
         e.preventDefault();
         setError(null);
         setSuccess(false);

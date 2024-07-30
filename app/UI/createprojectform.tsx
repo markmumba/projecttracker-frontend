@@ -12,7 +12,7 @@ function CreateProjectForm({ formData, handleSubmit, handleChange, lecturersList
 
     const [selectedLecturer, setSelectedLecturer] = useState<string>('');
 
-    const handleLecturerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    function handleLecturerChange  (e: React.ChangeEvent<HTMLSelectElement>)  {
         const selectedLecturerId = parseInt(e.target.value, 10);
         const selectedLecturerName = lecturersList?.find(lecturer => lecturer.id === selectedLecturerId)?.name || '';
         setSelectedLecturer(selectedLecturerName);
