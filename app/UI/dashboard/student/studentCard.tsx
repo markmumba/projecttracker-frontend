@@ -6,6 +6,9 @@ import Image, { StaticImageData } from "next/image";
 import UploadAvatar from "../../uploadavatar";
 import { useState } from "react";
 import UpdateUserProfileModal from "../../updateuserprofile";
+import { axiosInstance } from "@/app/fetcher/fetcher";
+import { useUserStore } from "@/app/shared/store";
+import { mutate } from "swr";
 
 
 
@@ -20,13 +23,27 @@ function StudentCard({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const avatarUrl: string | StaticImageData = userDetails?.profile_image || avatar;
-  console.log("avatarUrl:", avatarUrl);
+  const { setUser } = useUserStore();
+
 
   const handleUpdateProfile = async (updatedData: Partial<UserDetails>) => {
-    // Implement your API call to update the user profile here
     console.log('Updating user profile with:', updatedData);
-    // After successful update, you might want to refresh the userDetails
-    // For now, we'll just close the modal
+    try {
+      const requestBody = JSON.stringify(updatedData)
+      const response = await axiosInstance.put("/users", requestBody, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      if (response.status === 200) {
+        await mutate("/users");
+        setUser(response.data);
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      console.log(error)
+    }
     setIsModalOpen(false);
   };
 
