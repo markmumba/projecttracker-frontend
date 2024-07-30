@@ -1,9 +1,11 @@
-
+'use client';
 import { ProjectDetails, UserDetails } from "@/app/shared/types";
 import avatar from "@/public/images/user.png"
 import TimeRemaining from "./timeremaining";
 import Image, { StaticImageData } from "next/image";
 import UploadAvatar from "../../uploadavatar";
+import { useState } from "react";
+import UpdateUserProfileModal from "../../updateuserprofile";
 
 
 
@@ -16,8 +18,17 @@ function StudentCard({
   projectDetails?: ProjectDetails | null | undefined;
   submissionCount?: number | undefined;
 }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const avatarUrl: string | StaticImageData = userDetails?.profile_image || avatar;
   console.log("avatarUrl:", avatarUrl);
+
+  const handleUpdateProfile = async (updatedData: Partial<UserDetails>) => {
+    // Implement your API call to update the user profile here
+    console.log('Updating user profile with:', updatedData);
+    // After successful update, you might want to refresh the userDetails
+    // For now, we'll just close the modal
+    setIsModalOpen(false);
+  };
 
   return (
     <>
@@ -52,9 +63,26 @@ function StudentCard({
             <div className="text-lg font-bold">Submissions</div>
             <div className="text-base">{submissionCount}</div>
           </div>
+          <button
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Update Profile
+          </button>
         </div>
       </div>
       <TimeRemaining projectDetails={projectDetails} />
+      {userDetails && (
+        <UpdateUserProfileModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onUpdate={handleUpdateProfile}
+          currentUser={{
+            name: userDetails.name,
+            email: userDetails.email
+          }}
+        />
+      )}
     </>
   );
 }
