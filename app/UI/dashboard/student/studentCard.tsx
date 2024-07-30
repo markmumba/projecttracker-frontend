@@ -17,6 +17,8 @@ function StudentCard({
   submissionCount?: number | undefined;
 }) {
   const avatarUrl: string | StaticImageData = userDetails?.profile_image || avatar;
+  console.log("avatarUrl:", avatarUrl);
+
   return (
     <>
       <div className="flex flex-col p-4 rounded-lg">
@@ -27,6 +29,9 @@ function StudentCard({
             height={120}
             alt="avatar"
             className="object-cover"
+            onError={(e) => {
+              console.error("Error loading image:", e);
+            }}
           />
         </div>
         {!userDetails?.profile_image && <UploadAvatar />}
