@@ -60,13 +60,7 @@ function Submission() {
         e.preventDefault();
         try {
             const requestBody = JSON.stringify(formData);
-            console.log(requestBody)
-            const response = await axiosInstance.post('/submissions', requestBody, {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            const response = await axiosInstance.post('/submissions', requestBody);
             console.log('Project created successfully:', response.data);
             setFormData({
                 project_id: 0,

@@ -1,7 +1,7 @@
 "use client";
 import useSWR from "swr";
 import fetcher from "../fetcher/fetcher";
-import { DashboardSkeleton } from "../UI/skeletons";
+import { DashboardSkeleton, ProjectSkeleton, UserCardSkeleton } from "../UI/skeletons";
 import NoProject from "../UI/dashboard/student/noProject";
 import Project from "../UI/dashboard/student/project";
 import { useUserStore } from "../shared/store";
@@ -25,11 +25,8 @@ import ProgressBar from "../UI/progresbar";
 
 function Dashboard() {
   const { user, setUser } = useUserStore();
-  const {
-    data: userDetails,
-    isLoading: userLoading,
-    error: userError,
-  } = useSWR<UserDetails>("/users", fetcher);
+  const { data: userDetails, isLoading: userLoading, error: userError } = useSWR<UserDetails>
+    ("/users", fetcher);
 
   useEffect(() => {
     if (userDetails && (!user || JSON.stringify(user) !== JSON.stringify(userDetails))) {
@@ -37,29 +34,32 @@ function Dashboard() {
     }
   }, [userDetails, setUser, user]);
 
+
   const shouldFetch = user && user.role !== "lecturer";
-  const { data: projectDetails, error: projectError } = useSWR<ProjectDetails>(
-    shouldFetch ? "/projects" : null,
-    fetcher,
-  );
-  const { data: submissions, error: submissionError } = useSWR<
-    SubmissionDetails[]
-  >(shouldFetch ? "/submissions/student" : null, fetcher);
-  const { data: students, error: studentError } = useSWR<UserDetails[]>(
-    "/users/students",
-    fetcher,
-  );
-  const { data: feedbackDetails, error: feedbackError } = useSWR<
-    FeedbackDetails[]
-  >("/feedbacks/student", fetcher);
-  const { data: lecturerSubmissions, error: lecturerSubmissionError } = useSWR<
-    SubmissionDetails[]
-  >("/submissions/lecturer", fetcher);
+  const isLecturer = user && user.role === 'lecturer';
+
+  const { data: projectDetails, isLoading: projectLoading, error: projectError } = useSWR<ProjectDetails>
+    (shouldFetch ? "/projects" : null, fetcher);
+
+  const { data: submissions, error: submissionError } = useSWR<SubmissionDetails[]>
+    (shouldFetch ? "/submissions/student" : null, fetcher);
+
+  const { data: students, error: studentError } = useSWR<UserDetails[]>
+    (isLecturer ? "/users/students" : null, fetcher);
+
+  const { data: feedbackDetails, error: feedbackError } = useSWR<FeedbackDetails[]>
+    (shouldFetch ? "/feedbacks/student" : null, fetcher);
+
+  const { data: lecturerSubmissions, error: lecturerSubmissionError } = useSWR<SubmissionDetails[]>
+    (isLecturer ? "/submissions/lecturer" : null, fetcher);
 
   console.log(userDetails?.profile_image)
 
   if (userLoading) {
-    return <DashboardSkeleton />;
+    return <UserCardSkeleton />;
+  }
+  if (projectLoading) {
+    return <ProjectSkeleton />
   }
 
 
@@ -69,7 +69,6 @@ function Dashboard() {
   }
 
   if (projectError) {
-    console.error(projectError);
   }
 
   if (submissionError) {
@@ -87,6 +86,7 @@ function Dashboard() {
     console.error(lecturerSubmissionError);
   }
 
+
   const reviewedSumbissions = submissions?.filter((submission) => submission.reviewed == true);
   const submissionCount = reviewedSumbissions ? reviewedSumbissions.length : 0;
 
@@ -94,6 +94,7 @@ function Dashboard() {
   if (!userDetails) {
     return <div>No user data available</div>;
   }
+
 
   if (userDetails.role === "lecturer") {
     return (

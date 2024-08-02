@@ -108,6 +108,7 @@ function RegisterForm({ formData, handleChange, handleSubmit, errors }:
           <div className="w-full h-full">
             <Image
               src={registerImage}
+              priority={true}
               alt="Register Image"
               className="h-full w-full object-cover"
             />
