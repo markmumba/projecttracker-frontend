@@ -1,6 +1,5 @@
 'use client';
 import { ProjectDetails, UserDetails } from "@/app/shared/types";
-import avatar from "@/public/images/user.png"
 import TimeRemaining from "./timeremaining";
 import Image, { StaticImageData } from "next/image";
 import UploadAvatar from "../../uploadavatar";
@@ -22,7 +21,7 @@ function StudentCard({
   submissionCount?: number | undefined;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const avatarUrl: string | StaticImageData = userDetails?.profile_image || avatar;
+  const avatarUrl: string |undefined = userDetails?.profile_image;
   const { setUser } = useUserStore();
 
 
@@ -51,7 +50,7 @@ function StudentCard({
     <>
       <div className="flex flex-col p-4 rounded-lg">
         <div className="relative w-[120px] h-[120px] rounded-full mx-auto mb-4 overflow-hidden">
-          <Image
+          <img 
             src={avatarUrl}
             width={120}
             height={120}
