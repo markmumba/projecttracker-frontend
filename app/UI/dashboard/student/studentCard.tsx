@@ -22,7 +22,8 @@ function StudentCard({
   submissionCount?: number | undefined;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const avatarUrl: string | undefined = userDetails?.profile_image || (avatar as unknown as string);
+  const avatarUrl: string | undefined = userDetails?.profile_image || (typeof avatar === 'string' ? avatar : avatar.src);
+
   const { setUser } = useUserStore();
 
 
