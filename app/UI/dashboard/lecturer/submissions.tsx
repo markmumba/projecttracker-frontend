@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Spinner from '../../spinner';
-import { formatDate } from '@/app/shared/helper';
+import { formatDate, truncateDescription } from '@/app/shared/helper';
 
 function Submissions({ lecturerSubmissions }: {
     lecturerSubmissions?: SubmissionDetails[] | undefined | null,
@@ -21,17 +21,12 @@ function Submissions({ lecturerSubmissions }: {
         .sort((a, b) => {
             const dateA = new Date(a.submission_date).getTime();
             const dateB = new Date(b.submission_date).getTime();
-            return dateB - dateA;  
+            return dateB - dateA;
         }) ?? [];
 
-    const truncateDescription = (description: string, maxLength: number) => {
-        if (description.length > maxLength) {
-            return description.slice(0, maxLength) + '...';
-        }
-        return description;
-    };
 
-    const handleSubmissionClick = (submissionId: number) => {
+
+    function handleSubmissionClick(submissionId: number) {
         setIsLoading(true);
         setSelectedSubmissionId(submissionId);
         router.push('/dashboard/lecturer/submission');

@@ -23,17 +23,17 @@ function SubmissionModal({
     const [isEditing, setIsEditing] = useState(false);
     const [editedSubmission, setEditedSubmission] = useState(submission);
 
-    const handleDelete = () => {
+    function handleDelete() {
         console.log("delete button clicked ");
         onDelete(submission.id);
         onClose();
     };
 
-    const handleEdit = () => {
+    function handleEdit() {
         setIsEditing(true);
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const { name, value } = e.target;
         setEditedSubmission(prev => ({
             ...prev,
@@ -41,14 +41,9 @@ function SubmissionModal({
         }));
     };
 
-    const handleUpdate = async () => {
+    async function handleUpdate() {
         try {
-            const response = await axiosInstance.put(`/submissions/${submission.id}`, editedSubmission, {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            const response = await axiosInstance.put(`/submissions/${submission.id}`, editedSubmission);
 
             // Update the SWR cache
             mutate('/submissions/student', async (currentData: any) => {

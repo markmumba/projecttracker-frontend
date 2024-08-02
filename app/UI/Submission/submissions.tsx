@@ -29,31 +29,20 @@ function Submissions({ submissions: initialSubmissions, project }: {
 
   const deleteSubmission = async (submissionId: number) => {
     try {
-      await axiosInstance.delete(`/submissions/${submissionId}`, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      await axiosInstance.delete(`/submissions/${submissionId}`);
 
-      // Update local state after successful deletion
-      setSubmissions(prevSubmissions =>
-        prevSubmissions ? prevSubmissions.filter(sub => sub.id !== submissionId) : null
-      );
+      setSubmissions(prevSubmissions => prevSubmissions ? prevSubmissions.filter(sub => sub.id !== submissionId) : null);
 
-      // Update the SWR cache
       mutate('/submissions/student',
         async (currentData: any) => {
           return currentData ? currentData.filter((sub: any) => sub.id !== submissionId) : [];
         }, false);
 
-      // Close the modal if the deleted submission was selected
       if (selectedSubmission?.id === submissionId) {
         setSelectedSubmission(null);
       }
     } catch (error) {
       console.error('Failed to delete submission:', error);
-      // Handle error (e.g., show an error message to the user)
     }
   };
 

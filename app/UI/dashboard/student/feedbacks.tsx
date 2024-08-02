@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {  formatDate, truncateDescription } from '@/app/shared/helper';
+import { formatDate, truncateDescription } from '@/app/shared/helper';
 import { FeedbackDetails } from '@/app/shared/types';
 import Link from 'next/link';
 import FeedbackModal from './feedbackmodal';
@@ -12,15 +12,15 @@ function Feedbacks({ feedbackDetails }: { feedbackDetails: FeedbackDetails[] | u
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const handleFeedbackClick = (feedback: FeedbackDetails) => {
+    function handleFeedbackClick(feedback: FeedbackDetails) {
         setSelectedFeedback(feedback);
     };
 
-    const closeModal = () => {
+    function closeModal() {
         setSelectedFeedback(null);
     };
 
-    const handleViewAllFeedback = () => {
+    function handleViewAllFeedback() {
         setIsLoading(true);
         router.push('/dashboard/student/feedback')
     };

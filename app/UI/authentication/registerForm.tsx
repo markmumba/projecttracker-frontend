@@ -16,7 +16,7 @@ function RegisterForm({ formData, handleChange, handleSubmit, errors }:
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleLoginClick = () => {
+  function handleLoginClick  () {
     setIsLoading(true);
     router.push('/login');
   };

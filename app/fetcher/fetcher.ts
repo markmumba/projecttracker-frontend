@@ -8,8 +8,8 @@ export const axiosInstance = axios.create({
     ? 'http://localhost:8080'
     : process.env.NEXT_PUBLIC_BACKEND_API_URL || process.env.NEXT_BACKEND_API_URL,
   withCredentials: true,
-  headers :{
-    "Content-Type":"application/json"
+  headers: {
+    "Content-Type": "application/json"
   }
 });
 
@@ -44,7 +44,8 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export const fetcher = async (url: string) => {
+
+async function fetcher(url: string) {
   const response = await axiosInstance.get(url);
   return response.data;
 };

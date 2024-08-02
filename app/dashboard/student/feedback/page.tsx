@@ -8,7 +8,8 @@ import useSWR from "swr";
 function FeedbackPage() {
 
 
-    const { data: feedbackDetails, isLoading: feedbackLoading, error: feedbackError } = useSWR<FeedbackDetails[]>('/feedbacks/student', fetcher);
+    const { data: feedbackDetails, isLoading: feedbackLoading, error: feedbackError } = useSWR<FeedbackDetails[]>
+        ('/feedbacks/student', fetcher);
 
 
     if (feedbackLoading) {

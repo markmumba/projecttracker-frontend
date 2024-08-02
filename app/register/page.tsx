@@ -21,7 +21,7 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<registerFormData>>({});
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -30,7 +30,7 @@ function Register() {
     setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  const validateForm = () => {
+  function validateForm() {
     const newErrors: Partial<registerFormData> = {};
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
@@ -52,22 +52,21 @@ function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+
     e.preventDefault();
     if (!validateForm()) return;
     setLoading(true);
+
     try {
       const { confirm_password, ...requestData } = formData;
       const requestBody = JSON.stringify(requestData);
-      const response = await axiosInstance.post('/register', requestBody, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await axiosInstance.post('/register', requestBody);
       setSuccessMessage('Registration successful! Please log in.');
       router.push('/login');
+
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setLoading(false);
     }

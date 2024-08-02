@@ -20,7 +20,7 @@ function Login() {
   const [errors, setErrors] = useState<loginFormErrors>({});
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -30,7 +30,8 @@ function Login() {
     setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  const validateForm = () => {
+  function validateForm() {
+
     const newErrors: loginFormErrors = {};
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
@@ -44,24 +45,20 @@ function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+
     e.preventDefault();
     if (!validateForm()) return;
     setLoading(true);
+
     try {
       const requestBody = JSON.stringify(formData);
-      const response = await axiosInstance.post('/login', requestBody, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await axiosInstance.post('/login', requestBody);
       const accessToken = response.data.access_token
       setAccessToken(accessToken);
       router.push('/dashboard');
-    } catch (error) {
-      console.log(error);
 
+    } catch (error) {
       setErrors({ email: 'Invalid email or password' });
     } finally {
       setLoading(false);

@@ -16,10 +16,8 @@ function SubmissionDetail() {
     const [feedback, setFeedback] = useState<FeedbackDetails | null>(null);
 
 
-    const { data: submission, error: submissionError, mutate: mutateSubmission } = useSWR<SubmissionDetails>(
-        selectedSubmissionId ? `/submissions/${selectedSubmissionId}` : null,
-        fetcher
-    );
+    const { data: submission, error: submissionError, mutate: mutateSubmission } = useSWR<SubmissionDetails>
+        (selectedSubmissionId ? `/submissions/${selectedSubmissionId}` : null, fetcher);
 
     useEffect(() => {
         if (!selectedSubmissionId) {
@@ -31,12 +29,7 @@ function SubmissionDetail() {
         async function fetchFeedback() {
             if (submission && submission.reviewed) {
                 try {
-                    const response = await axiosInstance.get(`/feedbacks/submission/${selectedSubmissionId}`, {
-                        withCredentials: true,
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
+                    const response = await axiosInstance.get(`/feedbacks/submission/${selectedSubmissionId}`);
                     if (response.status === 200) {
                         setFeedback(response.data);
                         setFeedbackComment(response.data.comment);
@@ -65,27 +58,17 @@ function SubmissionDetail() {
             };
 
             if (submission?.reviewed) {
+
                 if (feedback?.id) {
-                    await axiosInstance.put(`/feedbacks/${feedback.id}`, feedbackData, {
-                        withCredentials: true,
-                        headers: { 'Content-Type': 'application/json' },
-                    });
+                    await axiosInstance.put(`/feedbacks/${feedback.id}`, feedbackData);
                 } else {
                     console.error('Feedback ID is undefined');
                 }
-            } else {
-                await axiosInstance.post('/feedbacks', feedbackData, {
-                    withCredentials: true,
-                    headers: { 'Content-Type': 'application/json' },
-                });
 
-                await axiosInstance.put(`/submissions/${selectedSubmissionId}`,
-                    { ...submission, reviewed: true },
-                    {
-                        withCredentials: true,
-                        headers: { 'Content-Type': 'application/json' },
-                    }
-                );
+            } else {
+
+                await axiosInstance.post('/feedbacks', feedbackData);
+                await axiosInstance.put(`/submissions/${selectedSubmissionId}`, { ...submission, reviewed: true });
             }
 
             mutateSubmission();

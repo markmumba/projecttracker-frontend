@@ -24,7 +24,7 @@ function TimeRemaining({ projectDetails }: { projectDetails: ProjectDetails | nu
     }
 
     return (
-        <div className={`px-4 py-2 ml-4 rounded-full max-w-xs focus:outline-none justify-center ${backgroundColorClass}`}>
+        <div className={`px-4 py-2 ml-4 rounded-xl max-w-xs focus:outline-none justify-center ${backgroundColorClass}`}>
             {timeRemaining && (timeRemaining.days > 0 || timeRemaining.hours > 0 )
                 ? `Time remaining to presentation: ${timeRemaining.days}d ${timeRemaining.hours}h`
                 : "Time is up"}

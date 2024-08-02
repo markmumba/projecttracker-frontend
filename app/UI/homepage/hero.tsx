@@ -9,7 +9,7 @@ import { ArrowDownCircleIcon } from '@heroicons/react/24/solid';
 function Hero() {
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleButtonClick = () => {
+    function handleButtonClick() {
         setIsLoading(true);
     };
 

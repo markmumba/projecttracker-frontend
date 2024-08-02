@@ -13,11 +13,11 @@ function FeedbackList({ feedbackDetails }: { feedbackDetails: FeedbackDetails[] 
 
     const [selectedFeedback, setSelectedFeedback] = useState<FeedbackDetails | null>(null);
 
-    const handleFeedbackClick = (feedback: FeedbackDetails) => {
+    function handleFeedbackClick(feedback: FeedbackDetails) {
         setSelectedFeedback(feedback);
     };
 
-    const closeModal = () => {
+    function closeModal() {
         setSelectedFeedback(null);
     };
 

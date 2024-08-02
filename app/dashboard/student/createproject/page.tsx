@@ -9,7 +9,8 @@ import useSWR from "swr";
 function CreateProjectPage() {
     const router = useRouter();
 
-    const { data: lecturersList, error: lecturerListError } = useSWR<UserDetails[]>('/users/lecturers', fetcher);
+    const { data: lecturersList, error: lecturerListError } = useSWR<UserDetails[]>
+        ('/users/lecturers', fetcher);
 
     if (lecturerListError) {
         console.log(lecturerListError.response?.data);
@@ -24,7 +25,7 @@ function CreateProjectPage() {
     });
 
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -32,12 +33,11 @@ function CreateProjectPage() {
         }));
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         try {
             const requestBody = JSON.stringify(formData);
             const response = await axiosInstance.post('/projects', requestBody);
-            console.log('Project created successfully:', response.data);
             setFormData({
                 title: '',
                 lecturer_id: 0,

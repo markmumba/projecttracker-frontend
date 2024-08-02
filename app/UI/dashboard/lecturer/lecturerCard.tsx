@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { UserDetails } from "@/app/shared/types";
 import avatar from "/public/images/user.png"
-import Image from "next/image";
 import UploadAvatar from "../../uploadavatar";
 import { useUserStore } from "@/app/shared/store";
 import { axiosInstance } from "@/app/fetcher/fetcher";
@@ -19,18 +18,13 @@ function LecturerCard({ userDetails, students }: {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const studentCount = students?.length || 0;
 
-    const avatarUrl = userDetails?.profile_image || avatar;
 
-    const handleUpdateProfile = async (updatedData: Partial<UserDetails>) => {
-        console.log('Updating user profile with:', updatedData);
+    const avatarUrl: string = userDetails?.profile_image || avatar.src;
+
+    async function handleUpdateProfile(updatedData: Partial<UserDetails>) {
         try {
             const requestBody = JSON.stringify(updatedData)
-            const response = await axiosInstance.put("/users", requestBody, {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
+            const response = await axiosInstance.put("/users", requestBody)
             if (response.status === 200) {
                 await mutate("/users");
                 setUser(response.data);
@@ -62,7 +56,7 @@ function LecturerCard({ userDetails, students }: {
     return (
         <div className="flex flex-col p-4 rounded-lg relative">
             <div className="w-20 h-30 mx-auto mb-4">
-                <Image src={avatarUrl} alt="avatar" width={300} height={300} className="w-full h-full rounded-full object-cover" />
+                <img src={avatarUrl} alt="avatar" width={300} height={300} className="w-full h-full rounded-full object-cover" />
             </div>
             {!userDetails?.profile_image && <UploadAvatar />}
             <div className="bg-gray-100 rounded-xl p-6">
@@ -76,8 +70,7 @@ function LecturerCard({ userDetails, students }: {
                     <div className='text-base relative mb-2'>
                         <button
                             onClick={handleClick}
-                            className="bg-blue-400 rounded-xl px-6 py-2"
-                        >
+                            className="bg-blue-400 rounded-xl px-6 py-2">
                             {studentCount}
                         </button>
                         {showStudents && students && students.length > 0 && (

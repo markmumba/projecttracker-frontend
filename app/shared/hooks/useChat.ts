@@ -4,7 +4,7 @@ import { useUserStore } from "../store";
 
 
 
-export const useChat = () => {
+export function useChat() {
   const [messages, setMessages] = useState<MessageDetails[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const { user } = useUserStore();
@@ -34,7 +34,7 @@ export const useChat = () => {
     };
   }, []);
 
-  const sendMessage = (message: string) => {
+  function sendMessage(message: string) {
     if (message.trim() && isConnected && ws.current) {
       const chatMessage = {
         message: message.trim(),

@@ -1,7 +1,8 @@
+import { SubmissionDetails } from "./types";
 
 
 
-export const truncateDescription = (description: string, maxLength: number) => {
+export function truncateDescription(description: string, maxLength: number) {
     if (description.length <= maxLength) {
         return description;
     } else {
@@ -22,3 +23,6 @@ export function formatDate(dateString: string) {
         hour12: true // 12-hour clock
     });
 }
+
+
+

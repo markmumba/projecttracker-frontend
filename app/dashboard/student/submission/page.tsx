@@ -13,16 +13,11 @@ import useSWR from "swr";
 
 function SubmissionPage() {
 
-  const { data: submissions, isLoading: submissionLoading, error: submissionError } = useSWR<SubmissionDetails[]>(
-    '/submissions/student',
-    fetcher,
-    { revalidateOnFocus: true } 
-  );
+  const { data: submissions, isLoading: submissionLoading, error: submissionError } = useSWR<SubmissionDetails[]>
+    ('/submissions/student', fetcher, { revalidateOnFocus: true });
 
-  const { data: project, error: projectError } = useSWR<ProjectDetails>(
-    '/projects',
-    fetcher
-  );
+  const { data: project, error: projectError } = useSWR<ProjectDetails>
+    ('/projects', fetcher);
 
   if (submissionLoading) {
     return <p>Loading...</p>;

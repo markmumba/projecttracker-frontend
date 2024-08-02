@@ -16,12 +16,7 @@ function SideNav() {
     const signOut = async () => {
         try {
             setIsLoading(true); // Set loading state to true when logout starts
-            const response = await axiosInstance.get('/logout', {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            const response = await axiosInstance.get('/logout');
             resetUser();
             router.push('/');
         } catch (error) {
