@@ -56,9 +56,12 @@ function Dashboard() {
     SubmissionDetails[]
   >("/submissions/lecturer", fetcher);
 
+  console.log(userDetails?.profile_image)
+
   if (userLoading) {
     return <DashboardSkeleton />;
   }
+
 
   if (userError) {
     console.error(userError.response?.data);
