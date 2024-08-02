@@ -66,7 +66,7 @@ function Dashboard() {
   }
 
   if (projectError) {
-    console.error(projectError);
+    console.error(projectError.response?.data);
   }
 
   if (submissionError) {
@@ -83,6 +83,7 @@ function Dashboard() {
   if (lecturerSubmissionError) {
     console.error(lecturerSubmissionError);
   }
+
 
   const reviewedSumbissions = submissions?.filter((submission) => submission.reviewed == true);
   const submissionCount = reviewedSumbissions ? reviewedSumbissions.length : 0;

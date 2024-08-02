@@ -36,14 +36,7 @@ function CreateProjectPage() {
         e.preventDefault();
         try {
             const requestBody = JSON.stringify(formData);
-            console.log(requestBody)
-            const response = await axiosInstance.post('/projects', requestBody, {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-
-            });
+            const response = await axiosInstance.post('/projects', requestBody);
             console.log('Project created successfully:', response.data);
             setFormData({
                 title: '',

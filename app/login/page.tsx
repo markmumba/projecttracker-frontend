@@ -6,13 +6,13 @@ import { useAuthStore } from "../shared/store";
 import { loginFormData, loginFormErrors } from "../shared/types";
 import LoginForm from "../UI/authentication/loginForm";
 import Spinner from "../UI/spinner";
+import { access } from "fs";
 
 // TODO : Handling persistent authentication state
 
 function Login() {
   const router = useRouter();
-  const successMessage = useAuthStore(state => state.successMessage);
-  const setSuccessMessage = useAuthStore(state => state.setSuccessMessage);
+  const { setSuccessMessage, successMessage, setAccessToken } = useAuthStore();
   const [formData, setFormData] = useState<loginFormData>({
     email: '',
     password: '',
@@ -56,11 +56,12 @@ function Login() {
           'Content-Type': 'application/json'
         }
       });
-      window.localStorage.setItem('token', response.data.token);
+      const accessToken = response.data.access_token
+      setAccessToken(accessToken);
       router.push('/dashboard');
     } catch (error) {
       console.log(error);
-     
+
       setErrors({ email: 'Invalid email or password' });
     } finally {
       setLoading(false);
@@ -79,10 +80,10 @@ function Login() {
     <>
       {loading && <Spinner />}
       {successMessage && <div className="bg-green-500 text-white text-center p-3">{successMessage}</div>}
-      <LoginForm 
-        formData={formData} 
-        handleChange={handleChange} 
-        handleSubmit={handleSubmit} 
+      <LoginForm
+        formData={formData}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
         errors={errors}
       />
     </>
