@@ -23,7 +23,6 @@ function StudentCard({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const avatarUrl: string | undefined = userDetails?.profile_image || (typeof avatar === 'string' ? avatar : avatar.src);
-
   const { setUser } = useUserStore();
 
 
