@@ -9,13 +9,34 @@ function UploadAvatar() {
     const [file, setFile] = useState<File | null>(null);
     const [progress, setProgress] = useState<number | null>(null);
     const [isUploaded, setIsUploaded] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+
+    const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
+
+    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const selectedFile = e.target.files ? e.target.files[0] : null;
+        if (selectedFile) {
+            if (allowedFileTypes.includes(selectedFile.type)) {
+                setFile(selectedFile);
+                setError(null);
+            } else {
+                setFile(null);
+                setError('Please select a valid image file (PNG, JPG, JPEG, or GIF)');
+            }
+        }
+    }
+
 
     function handleUpload() {
-        if (!file) return;
+        if (!file) {
+            setError('Please select a file first');
+            return;
+        }
 
         const storageRef = ref(storage, `avatars/${file.name + v4()}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
-        
+
         uploadTask.on(
             'state_changed',
             (snapshot) => {
@@ -36,15 +57,15 @@ function UploadAvatar() {
                             'Content-Type': 'application/json',
                         },
                     })
-                    .then((response) => {
-                        console.log('Avatar updated successfully');
-                        setProgress(null);
-                        setIsUploaded(true);
-                    })
-                    .catch((error) => {
-                        console.error('Failed to update avatar', error);
-                        setProgress(null);
-                    });
+                        .then((response) => {
+                            console.log('Avatar updated successfully');
+                            setProgress(null);
+                            setIsUploaded(true);
+                        })
+                        .catch((error) => {
+                            console.error('Failed to update avatar', error);
+                            setProgress(null);
+                        });
                 });
             }
         );
@@ -67,6 +88,7 @@ function UploadAvatar() {
                             Upload
                         </button>
                     </div>
+                    {error && <div className="mt-2 text-red-500">{error}</div>}
                     {progress !== null && (
                         <div className="mt-2 text-gray-500">Progress: {progress.toFixed(2)}%</div>
                     )}
