@@ -51,7 +51,7 @@ function StudentCard({
     <>
       <div className="flex flex-col p-4 rounded-lg">
         <div className="relative w-[120px] h-[120px] rounded-full mx-auto mb-4 overflow-hidden">
-          <Image
+          <img
             src={avatarUrl}
             width={120}
             height={120}
