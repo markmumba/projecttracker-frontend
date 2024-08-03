@@ -53,10 +53,8 @@ function StudentCard({
         <div className="relative w-[120px] h-[120px] rounded-full mx-auto mb-4 overflow-hidden">
           <img
             src={avatarUrl}
-            width={120}
-            height={120}
             alt="avatar"
-            className="object-cover"
+            className="w-full h-full object-cover"
             onError={(e) => {
               console.error("Error loading image:", e);
             }}

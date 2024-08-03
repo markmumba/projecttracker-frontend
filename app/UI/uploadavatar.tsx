@@ -72,17 +72,17 @@ function UploadAvatar() {
     };
 
     return (
-        <div className="flex flex-col items-center mt-4">
+        <div className="flex flex-col items-center mt-4 w-full max-w-md">
             {!isUploaded ? (
                 <>
-                    <div className="flex items-center space-x-2 w-full">
+                    <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full">
                         <input
                             type="file"
                             onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-                            className="block flex-grow text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none"
+                            className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none"
                         />
                         <button
-                            className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 whitespace-nowrap"
+                            className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 whitespace-nowrap w-full sm:w-auto"
                             onClick={handleUpload}
                         >
                             Upload

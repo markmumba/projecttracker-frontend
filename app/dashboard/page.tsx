@@ -1,5 +1,5 @@
 "use client";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import fetcher from "../fetcher/fetcher";
 import { DashboardSkeleton, ProjectSkeleton, UserCardSkeleton } from "../UI/skeletons";
 import NoProject from "../UI/dashboard/student/noProject";
@@ -23,89 +23,112 @@ import ProgressBar from "../UI/progresbar";
 // TODO : middleware to check auth so no page can load without auth
 // TODO : Adding the sekeletons to every page
 
+
+
 function Dashboard() {
   const { user, setUser } = useUserStore();
+  
+  // Fetch user details
   const { data: userDetails, isLoading: userLoading, error: userError } = useSWR<UserDetails>
-    ("/users", fetcher);
+    ("/users", fetcher, {
+      revalidateOnMount: true,
+      refreshInterval: 0,
+      dedupingInterval: 0
+    });
 
+  // Update Zustand store when user details change
   useEffect(() => {
     if (userDetails && (!user || JSON.stringify(user) !== JSON.stringify(userDetails))) {
       setUser(userDetails);
     }
   }, [userDetails, setUser, user]);
 
+  // Determine if we should fetch other data based on user role
+  const shouldFetch = userDetails && userDetails.role !== "lecturer";
+  const isLecturer = userDetails && userDetails.role === 'lecturer';
 
-  const shouldFetch = user && user.role !== "lecturer";
-  const isLecturer = user && user.role === 'lecturer';
-
+  // Fetch project details
   const { data: projectDetails, isLoading: projectLoading, error: projectError } = useSWR<ProjectDetails>
-    (shouldFetch ? "/projects" : null, fetcher);
+    (shouldFetch ? "/projects" : null, fetcher, {
+      revalidateOnMount: true,
+      refreshInterval: 0,
+      dedupingInterval: 0
+    });
 
+  // Fetch submissions
   const { data: submissions, error: submissionError } = useSWR<SubmissionDetails[]>
-    (shouldFetch ? "/submissions/student" : null, fetcher);
+    (shouldFetch ? "/submissions/student" : null, fetcher, {
+      revalidateOnMount: true,
+      refreshInterval: 0,
+      dedupingInterval: 0
+    });
 
+  // Fetch students (for lecturer)
   const { data: students, error: studentError } = useSWR<UserDetails[]>
-    (isLecturer ? "/users/students" : null, fetcher);
+    (isLecturer ? "/users/students" : null, fetcher, {
+      revalidateOnMount: true,
+      refreshInterval: 0,
+      dedupingInterval: 0
+    });
 
+  // Fetch feedback
   const { data: feedbackDetails, error: feedbackError } = useSWR<FeedbackDetails[]>
-    (shouldFetch ? "/feedbacks/student" : null, fetcher);
+    (shouldFetch ? "/feedbacks/student" : null, fetcher, {
+      revalidateOnMount: true,
+      refreshInterval: 0,
+      dedupingInterval: 0
+    });
 
+  // Fetch lecturer submissions
   const { data: lecturerSubmissions, error: lecturerSubmissionError } = useSWR<SubmissionDetails[]>
-    (isLecturer ? "/submissions/lecturer" : null, fetcher);
+    (isLecturer ? "/submissions/lecturer" : null, fetcher, {
+      revalidateOnMount: true,
+      refreshInterval: 0,
+      dedupingInterval: 0
+    });
 
-  console.log(userDetails?.profile_image)
+  // Function to manually refetch all data
+  const refetchAllData = () => {
+    mutate("/users");
+    if (shouldFetch) {
+      mutate("/projects");
+      mutate("/submissions/student");
+      mutate("/feedbacks/student");
+    }
+    if (isLecturer) {
+      mutate("/users/students");
+      mutate("/submissions/lecturer");
+    }
+  };
 
-  if (userLoading) {
-    return <UserCardSkeleton />;
-  }
-  if (projectLoading) {
-    return <ProjectSkeleton />
-  }
+  // Effect to refetch all data when user changes
+  useEffect(() => {
+    refetchAllData();
+  }, [userDetails?.id]);
 
-
-  if (userError) {
-    console.error(userError.response?.data);
-    return <div>Error loading user data</div>;
-  }
-
-  if (projectError) {
-  }
-
-  if (submissionError) {
-    console.error(submissionError);
-  }
-
-  if (studentError) {
-    console.error(studentError);
-  }
-  if (feedbackError) {
-    console.error(feedbackError);
-  }
-
-  if (lecturerSubmissionError) {
-    console.error(lecturerSubmissionError);
+  // Loading states
+  if (userLoading || projectLoading) {
+    return <div>Loading...</div>;
   }
 
-
-  const reviewedSumbissions = submissions?.filter((submission) => submission.reviewed == true);
-  const submissionCount = reviewedSumbissions ? reviewedSumbissions.length : 0;
-
-
-  if (!userDetails) {
-    return <div>No user data available</div>;
+  // Error states
+  if (userError || projectError || submissionError || studentError || feedbackError || lecturerSubmissionError) {
+    console.error("Error loading data:", { userError, projectError, submissionError, studentError, feedbackError, lecturerSubmissionError });
+    return <div>Error loading data. Please try refreshing the page.</div>;
   }
 
+  // Calculate submission count
+  const reviewedSubmissions = submissions?.filter((submission) => submission.reviewed === true);
+  const submissionCount = reviewedSubmissions ? reviewedSubmissions.length : 0;
 
-  if (userDetails.role === "lecturer") {
+  // Render dashboard based on user role
+  if (userDetails?.role === "lecturer") {
     return (
       <div className="">
         <div className="flex flex-col md:flex-row justify-between">
           <div className="mb-4 md:mb-0 md:w-3/4 p-4 flex-grow">
-            <h1 className="text-2xl font-bold mb-4">
-              {" "}
-              Welcome back Lecturer {userDetails.name}
-            </h1>
-            <h1 className="text-2xl font-bold mb-4"> Latest Submissions</h1>
+            <h1 className="text-2xl font-bold mb-4">Welcome back Lecturer {userDetails.name}</h1>
+            <h1 className="text-2xl font-bold mb-4">Latest Submissions</h1>
             <Submissions lecturerSubmissions={lecturerSubmissions} />
           </div>
           <div className="md:w-1/4 p-4">
@@ -119,22 +142,19 @@ function Dashboard() {
   return (
     <div>
       <ProgressBar submissionCount={submissionCount} maxSubmissions={10} />
-      <div className=" p-4">
+      <div className="p-4">
         <div className="flex flex-col relative md:flex-row justify-between">
-          <div className="mb-4 md:mb-0 md:w-3/4  p-4 flex-grow">
+          <div className="mb-4 md:mb-0 md:w-3/4 p-4 flex-grow">
             {projectDetails ? (
               <>
-                <Project
-                  projectDetails={projectDetails}
-                  userDetails={userDetails}
-                />
+                <Project projectDetails={projectDetails} userDetails={userDetails} />
                 <Feedbacks feedbackDetails={feedbackDetails} />
               </>
             ) : (
               <NoProject userDetails={userDetails} />
             )}
           </div>
-          <div className="md:w-1/4  p-4">
+          <div className="md:w-1/4 p-4">
             <StudentCard
               userDetails={userDetails}
               projectDetails={projectDetails}
