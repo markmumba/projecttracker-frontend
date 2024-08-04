@@ -27,7 +27,7 @@ import ProgressBar from "../UI/progresbar";
 
 function Dashboard() {
   const { user, setUser } = useUserStore();
-  
+
   // Fetch user details
   const { data: userDetails, isLoading: userLoading, error: userError } = useSWR<UserDetails>
     ("/users", fetcher, {
@@ -35,6 +35,7 @@ function Dashboard() {
       refreshInterval: 0,
       dedupingInterval: 0
     });
+
 
   // Update Zustand store when user details change
   useEffect(() => {
@@ -110,12 +111,30 @@ function Dashboard() {
   if (userLoading || projectLoading) {
     return <div>Loading...</div>;
   }
+  // if (userError) {
+  //   console.error("Error loading user data:", userError);
+  //   return <div>Error loading user data. Please try refreshing the page.</div>;
+  // }
 
-  // Error states
-  if (userError || projectError || submissionError || studentError || feedbackError || lecturerSubmissionError) {
-    console.error("Error loading data:", { userError, projectError, submissionError, studentError, feedbackError, lecturerSubmissionError });
-    return <div>Error loading data. Please try refreshing the page.</div>;
-  }
+  // // For non-lecturers, only check for submission and feedback errors if there's a project
+  // if (userDetails?.role !== "lecturer") {
+  //   if (projectError) {
+  //     // Project not found is not considered an error for new users
+  //     if (projectError.message !== "Project not found") {
+  //       console.error("Error loading project data:", projectError);
+  //       return <div>Error loading project data. Please try refreshing the page.</div>;
+  //     }
+  //   } else if (submissionError || feedbackError) {
+  //     console.error("Error loading data:", { submissionError, feedbackError });
+  //     return <div>Error loading data. Please try refreshing the page.</div>;
+  //   }
+  // } else {
+  //   // For lecturers, check lecturer-specific errors
+  //   if (studentError || lecturerSubmissionError) {
+  //     console.error("Error loading data:", { studentError, lecturerSubmissionError });
+  //     return <div>Error loading data. Please try refreshing the page.</div>;
+  //   }
+  // }
 
   // Calculate submission count
   const reviewedSubmissions = submissions?.filter((submission) => submission.reviewed === true);

@@ -1,6 +1,6 @@
 // the main models
 export interface ProjectDetails {
-  id: number;
+  id: string;
   title: string;
   description: string;
   start_date: string;
@@ -10,7 +10,7 @@ export interface ProjectDetails {
 }
 
 export interface UserDetails {
-  id?: number;
+  id?: string;
   name?: string;
   email?: string;
   role?: string | undefined;
@@ -18,7 +18,7 @@ export interface UserDetails {
 }
 
 export interface SubmissionDetails {
-  id: number;
+  id: string;
   description: string;
   document_path: string;
   submission_date: string;
@@ -28,7 +28,7 @@ export interface SubmissionDetails {
 }
 
 export interface FeedbackDetails {
-  id: number;
+  id: string;
   comment: string;
   feedback_date: string;
   submission: SubmissionDetails;
@@ -36,7 +36,7 @@ export interface FeedbackDetails {
 }
 
 export interface MessageDetails {
-  id: number;
+  id: string;
   senderId: number;
   receiverId: number;
   message: string;
@@ -64,15 +64,15 @@ export interface registerFormData {
 
 export interface CreateProjectFormData {
   title: string;
-  lecturer_id: number;
+  lecturer_id: string;
   description: string;
   start_date: string;
   end_date: string;
 }
 
 export interface CreateSubmissionFormData {
-  project_id: number;
-  student_id: number;
+  project_id: string;
+  student_id: string;
   submission_date: string;
   document_path: string;
   description: string;
@@ -80,7 +80,7 @@ export interface CreateSubmissionFormData {
 }
 
 export interface CreateFeedbackFormData {
-  submission_id: number | null | undefined;
+  submission_id: string | null | undefined;
   feedback_date: string;
   comment: string;
 }

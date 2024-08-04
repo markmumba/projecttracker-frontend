@@ -11,14 +11,14 @@ function CreateProjectPage() {
 
     const { data: lecturersList, error: lecturerListError } = useSWR<UserDetails[]>
         ('/users/lecturers', fetcher);
-
+    console.log(lecturersList)
     if (lecturerListError) {
         console.log(lecturerListError.response?.data);
     }
 
     const [formData, setFormData] = useState<CreateProjectFormData>({
         title: '',
-        lecturer_id: 0,
+        lecturer_id: '',
         description: '',
         start_date: '',
         end_date: '',
@@ -29,7 +29,7 @@ function CreateProjectPage() {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: name === 'lecturer_id' ? parseInt(value, 10) : value,
+            [name]: value,
         }));
     };
 
@@ -40,7 +40,7 @@ function CreateProjectPage() {
             const response = await axiosInstance.post('/projects', requestBody);
             setFormData({
                 title: '',
-                lecturer_id: 0,
+                lecturer_id: '',
                 description: '',
                 start_date: '',
                 end_date: '',

@@ -18,21 +18,19 @@ function SideNav() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     async function signOut() {
-        if (window.confirm('Are you sure you want to log out?')) {
-            setIsLoading(true);
-            try {
-                await axiosInstance.get('/logout');
-                resetUser();
-                setAccessToken(null);
-                mutate(() => true, undefined, { revalidate: false });
-                sessionStorage.removeItem('auth-storage');
-                await router.push('/');
-            } catch (error) {
-                console.error('Logout failed:', error);
-            } finally {
-                setIsLoading(false);
-                setIsModalOpen(false);
-            }
+        setIsLoading(true);
+        try {
+            await axiosInstance.get('/logout');
+            resetUser();
+            setAccessToken(null);
+            mutate(() => true, undefined, { revalidate: false });
+            sessionStorage.removeItem('auth-storage');
+            await router.push('/');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        } finally {
+            setIsLoading(false);
+            setIsModalOpen(false);
         }
     };
     return (
@@ -51,9 +49,9 @@ function SideNav() {
                 <button
                     onClick={() => setIsModalOpen(true)}
                     disabled={isLoading}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors disabled:opacity-50"
+                    className="px-4 py-2 bg-blue-500 text-white flex  rounded hover:bg-blue-600 transition-colors disabled:opacity-50"
                 >
-                    <PowerIcon className="w-6" />
+                    <PowerIcon className="w-6 mx-4" />
                     {isLoading ? 'Logging out...' : 'Sign Out'}
                 </button>
             </div>
