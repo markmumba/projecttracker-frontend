@@ -53,13 +53,13 @@ export const useAuthStore = create<AuthState>(
 
 
 interface SubmissionState {
-  selectedSubmissionId: number | null;
-  setSelectedSubmissionId: (id: number) => void;
+  selectedSubmissionId: string | null;
+  setSelectedSubmissionId: (id: string) => void;
 }
 
 export const useSubmissionStore = create<SubmissionState>((set) => ({
   selectedSubmissionId: null,
-  setSelectedSubmissionId: (id: number) => set({ selectedSubmissionId: id }),
+  setSelectedSubmissionId: (id: string) => set({ selectedSubmissionId: id }),
 }));
 
 interface UserState {

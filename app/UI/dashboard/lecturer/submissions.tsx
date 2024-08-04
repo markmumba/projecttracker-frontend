@@ -26,7 +26,7 @@ function Submissions({ lecturerSubmissions }: {
 
 
 
-    function handleSubmissionClick(submissionId: number) {
+    function handleSubmissionClick(submissionId: string) {
         setIsLoading(true);
         setSelectedSubmissionId(submissionId);
         router.push('/dashboard/lecturer/submission');

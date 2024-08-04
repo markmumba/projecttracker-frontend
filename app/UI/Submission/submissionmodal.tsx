@@ -17,7 +17,7 @@ function SubmissionModal({
 }: {
     submission: SubmissionDetails,
     onClose: () => void,
-    onDelete: (id: number) => void
+    onDelete: (id: string) => void
     onUpdate: (updatedSubmission: SubmissionDetails) => void
 }) {
     const [isEditing, setIsEditing] = useState(false);

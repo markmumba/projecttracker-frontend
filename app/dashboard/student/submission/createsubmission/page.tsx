@@ -20,9 +20,9 @@ function Submission() {
     }
 
     const [formData, setFormData] = useState<CreateSubmissionFormData>({
-        project_id: 0,
+        project_id: '',
         reviewed: false,
-        student_id: 0,
+        student_id: '',
         submission_date: '',
         document_path: '',
         description: '',
@@ -32,8 +32,8 @@ function Submission() {
         const currentDate = new Date().toISOString().slice(0, 16);
         if (project) {
             setFormData({
-                project_id: project?.id ?? 0,
-                student_id: project?.student?.id ?? 0,
+                project_id: project?.id ?? '',
+                student_id: project?.student?.id ?? '',
                 reviewed: false,
                 submission_date: currentDate,
                 document_path: '',
@@ -62,9 +62,9 @@ function Submission() {
             const response = await axiosInstance.post('/submissions', requestBody);
             console.log('Project created successfully:', response.data);
             setFormData({
-                project_id: 0,
+                project_id: '',
                 reviewed: false,
-                student_id: 0,
+                student_id: '',
                 submission_date: '',
                 document_path: '',
                 description: '',
