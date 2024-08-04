@@ -37,8 +37,8 @@ export interface FeedbackDetails {
 
 export interface MessageDetails {
   id: string;
-  senderId: number;
-  receiverId: number;
+  senderId: string;
+  receiverId: string;
   message: string;
   messageDate: string;
 }
