@@ -11,7 +11,6 @@ function UploadAvatar() {
     const [isUploaded, setIsUploaded] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-
     const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -26,7 +25,6 @@ function UploadAvatar() {
             }
         }
     }
-
 
     function handleUpload() {
         if (!file) {
@@ -78,7 +76,7 @@ function UploadAvatar() {
                     <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full">
                         <input
                             type="file"
-                            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+                            onChange={handleFileChange}
                             className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none"
                         />
                         <button
@@ -101,3 +99,4 @@ function UploadAvatar() {
 };
 
 export default UploadAvatar;
+
