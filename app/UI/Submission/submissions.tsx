@@ -27,7 +27,7 @@ function Submissions({ submissions: initialSubmissions, project }: {
     setSelectedSubmission(submission);
   };
 
-  const deleteSubmission = async (submissionId: number) => {
+  const deleteSubmission = async (submissionId: string) => {
     try {
       await axiosInstance.delete(`/submissions/${submissionId}`);
 

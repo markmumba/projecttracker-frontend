@@ -103,9 +103,7 @@ function Dashboard() {
   };
 
   // Effect to refetch all data when user changes
-  useEffect(() => {
-    refetchAllData();
-  }, [userDetails?.id]);
+
 
   // Loading states
   if (userLoading || projectLoading) {

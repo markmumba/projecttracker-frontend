@@ -11,7 +11,6 @@ function CreateProjectPage() {
 
     const { data: lecturersList, error: lecturerListError } = useSWR<UserDetails[]>
         ('/users/lecturers', fetcher);
-    console.log(lecturersList)
     if (lecturerListError) {
         console.log(lecturerListError.response?.data);
     }
