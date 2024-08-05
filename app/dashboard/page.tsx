@@ -1,5 +1,5 @@
 "use client";
-import useSWR, { mutate } from "swr";
+import useSWR, { mutate, useSWRConfig } from "swr";
 import fetcher from "../fetcher/fetcher";
 import { DashboardSkeleton, ProjectSkeleton, UserCardSkeleton } from "../UI/skeletons";
 import NoProject from "../UI/dashboard/student/noProject";
@@ -17,25 +17,24 @@ import {
   UserDetails,
 } from "../shared/types";
 import ProgressBar from "../UI/progresbar";
+import LecturerCard from "../UI/dashboard/lecturer/lecturerCard";
 
-// TODO : can view due date of project
-// TODO : be alerted if the submission are not enough
-// TODO : middleware to check auth so no page can load without auth
 // TODO : Adding the sekeletons to every page
-
 
 
 function Dashboard() {
   const { user, setUser } = useUserStore();
+  const { mutate } = useSWRConfig();
 
   // Fetch user details
-  const { data: userDetails, isLoading: userLoading, error: userError } = useSWR<UserDetails>
+  const { data: userDetails, error: userError } = useSWR<UserDetails>
     ("/users", fetcher, {
       revalidateOnMount: true,
-      refreshInterval: 0,
-      dedupingInterval: 0
+      onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+        if (retryCount >= 3) return;
+        setTimeout(() => revalidate({ retryCount }), 5000);
+      },
     });
-
 
   // Update Zustand store when user details change
   useEffect(() => {
@@ -49,90 +48,49 @@ function Dashboard() {
   const isLecturer = userDetails && userDetails.role === 'lecturer';
 
   // Fetch project details
-  const { data: projectDetails, isLoading: projectLoading, error: projectError } = useSWR<ProjectDetails>
+  const { data: projectDetails, error: projectError } = useSWR<ProjectDetails>
     (shouldFetch ? "/projects" : null, fetcher, {
       revalidateOnMount: true,
-      refreshInterval: 0,
-      dedupingInterval: 0
+      onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+        if (error.status === 404) return; // Don't retry on 404
+        if (retryCount >= 3) return;
+        setTimeout(() => revalidate({ retryCount }), 5000);
+      },
     });
 
   // Fetch submissions
   const { data: submissions, error: submissionError } = useSWR<SubmissionDetails[]>
     (shouldFetch ? "/submissions/student" : null, fetcher, {
       revalidateOnMount: true,
-      refreshInterval: 0,
-      dedupingInterval: 0
     });
 
   // Fetch students (for lecturer)
   const { data: students, error: studentError } = useSWR<UserDetails[]>
     (isLecturer ? "/users/students" : null, fetcher, {
       revalidateOnMount: true,
-      refreshInterval: 0,
-      dedupingInterval: 0
     });
 
   // Fetch feedback
   const { data: feedbackDetails, error: feedbackError } = useSWR<FeedbackDetails[]>
     (shouldFetch ? "/feedbacks/student" : null, fetcher, {
       revalidateOnMount: true,
-      refreshInterval: 0,
-      dedupingInterval: 0
     });
 
   // Fetch lecturer submissions
   const { data: lecturerSubmissions, error: lecturerSubmissionError } = useSWR<SubmissionDetails[]>
     (isLecturer ? "/submissions/lecturer" : null, fetcher, {
       revalidateOnMount: true,
-      refreshInterval: 0,
-      dedupingInterval: 0
     });
 
-  // Function to manually refetch all data
-  const refetchAllData = () => {
-    mutate("/users");
-    if (shouldFetch) {
-      mutate("/projects");
-      mutate("/submissions/student");
-      mutate("/feedbacks/student");
-    }
-    if (isLecturer) {
-      mutate("/users/students");
-      mutate("/submissions/lecturer");
-    }
-  };
-
-  // Effect to refetch all data when user changes
-
-
-  // Loading states
-  if (userLoading || projectLoading) {
+  // Loading state
+  if (!userDetails && !userError) {
     return <div>Loading...</div>;
   }
-  // if (userError) {
-  //   console.error("Error loading user data:", userError);
-  //   return <div>Error loading user data. Please try refreshing the page.</div>;
-  // }
 
-  // // For non-lecturers, only check for submission and feedback errors if there's a project
-  // if (userDetails?.role !== "lecturer") {
-  //   if (projectError) {
-  //     // Project not found is not considered an error for new users
-  //     if (projectError.message !== "Project not found") {
-  //       console.error("Error loading project data:", projectError);
-  //       return <div>Error loading project data. Please try refreshing the page.</div>;
-  //     }
-  //   } else if (submissionError || feedbackError) {
-  //     console.error("Error loading data:", { submissionError, feedbackError });
-  //     return <div>Error loading data. Please try refreshing the page.</div>;
-  //   }
-  // } else {
-  //   // For lecturers, check lecturer-specific errors
-  //   if (studentError || lecturerSubmissionError) {
-  //     console.error("Error loading data:", { studentError, lecturerSubmissionError });
-  //     return <div>Error loading data. Please try refreshing the page.</div>;
-  //   }
-  // }
+  // Error state
+  if (userError) {
+    return <div>Error loading user data. Please try refreshing the page.</div>;
+  }
 
   // Calculate submission count
   const reviewedSubmissions = submissions?.filter((submission) => submission.reviewed === true);
@@ -149,7 +107,7 @@ function Dashboard() {
             <Submissions lecturerSubmissions={lecturerSubmissions} />
           </div>
           <div className="md:w-1/4 p-4">
-            <LecuturerCard userDetails={userDetails} students={students} />
+            <LecturerCard userDetails={userDetails} students={students} />
           </div>
         </div>
       </div>
@@ -185,3 +143,24 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

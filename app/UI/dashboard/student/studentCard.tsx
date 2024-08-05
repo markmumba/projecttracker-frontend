@@ -26,16 +26,11 @@ function StudentCard({
   const { setUser } = useUserStore();
 
 
-  const handleUpdateProfile = async (updatedData: Partial<UserDetails>) => {
-    console.log('Updating user profile with:', updatedData);
+  async function handleUpdateProfile(updatedData: Partial<UserDetails>) {
+
     try {
       const requestBody = JSON.stringify(updatedData)
-      const response = await axiosInstance.put("/users", requestBody, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      const response = await axiosInstance.put("/users", requestBody)
       if (response.status === 200) {
         await mutate("/users");
         setUser(response.data);

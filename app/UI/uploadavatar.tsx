@@ -4,6 +4,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { axiosInstance } from '../fetcher/fetcher';
 import { v4 } from 'uuid';
 import { storage } from '../shared/firebaseconfig';
+import { mutate } from 'swr';
 
 function UploadAvatar() {
     const [file, setFile] = useState<File | null>(null);
@@ -47,18 +48,12 @@ function UploadAvatar() {
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    axiosInstance.post(`/users/profile`, {
-                        "profile_image": downloadURL,
-                    }, {
-                        withCredentials: true,
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
+                    axiosInstance.post(`/users/profile`, { "profile_image": downloadURL })
                         .then((response) => {
                             console.log('Avatar updated successfully');
                             setProgress(null);
                             setIsUploaded(true);
+                            mutate("/users")
                         })
                         .catch((error) => {
                             console.error('Failed to update avatar', error);
