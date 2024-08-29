@@ -55,9 +55,17 @@ function LecturerCard({ userDetails, students }: {
 
     return (
         <div className="flex flex-col p-4 rounded-lg relative">
-            <div className="w-20 h-30 mx-auto mb-4">
-                <img src={avatarUrl} alt="avatar" width={300} height={300} className="w-full h-full rounded-full object-cover" />
-            </div>
+
+        <div className="relative w-[120px] h-[120px] rounded-full mx-auto mb-4 overflow-hidden">
+          <img
+            src={avatarUrl}
+            alt="avatar"
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              console.error("Error loading image:", e);
+            }}
+          />
+        </div>
             {!userDetails?.profile_image && <UploadAvatar />}
             <div className="bg-gray-100 rounded-xl p-6">
                 <div className="mb-1 p-4 rounded-xl">
